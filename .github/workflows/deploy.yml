@@ -233,19 +233,3 @@ jobs:
           context: _build/repack/Release
           tags: kspckan/metadata
           push: true
-
-  notify-discord:
-    needs:
-      - test-release
-      - smoke-inflator
-      - upload-release-s3
-      - upload-deb
-      - upload-rpm
-      - upload-inflator
-      - upload-metadata-tester
-    if: always()
-    uses: ./.github/workflows/notify.yml
-    with:
-      name: ${{ github.workflow }}
-      success: ${{ !contains(needs.*.result, 'failure') }}
-    secrets: inherit
