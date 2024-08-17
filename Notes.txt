@@ -1,0 +1,9 @@
+Requirenments:
+
+There don't seem to be any checks for symlinks. I could create a ZIP with a link in ZIPFOLDER/link that symlinks to /. Then I could have files that are contained in the ZIP that get extracted to ZIPFOLDER/link. This way I can circumvent the checks if the paths contains ".."
+
+
+// The installation path (install_to field in JSON) cannot contain updirs (ModuleInstallDescriptor.cs L373)
+
+
+

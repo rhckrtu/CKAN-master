@@ -1,0 +1,64 @@
+name: Smoke Test NetKAN
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+  workflow_call:
+    outputs:
+      repack-artifact-id:
+        description: "Artifact ID of the repack"
+        value: ${{ jobs.build-release.outputs.repack-artifact-id }}
+
+jobs:
+  build-release:
+    uses: ./.github/workflows/build.yml
+    with:
+      configuration: Release
+  smoke-test-inflator:
+    needs: build-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download repack artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Release-repack-unsigned
+          path: _build/repack/
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build Inflator image
+        uses: docker/build-push-action@v5
+        with:
+          file: Dockerfile.netkan
+          context: _build/repack/Release
+          tags: kspckan/inflator
+          outputs: type=image
+      - name: Smoke test Inflator image
+        run: >
+          docker run --rm --entrypoint /bin/bash kspckan/inflator -c "mono netkan.exe
+          https://raw.githubusercontent.com/KSP-CKAN/NetKAN/master/NetKAN/ZeroMiniAVC.netkan"
+      - name: Export Inflator image tar file
+        uses: docker/build-push-action@v5
+        with:
+          file: Dockerfile.netkan
+          context: _build/repack/Release
+          tags: kspckan/inflator
+          outputs: type=docker,dest=/tmp/inflator-image.tar
+      - name: Upload Inflator image tar file artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: inflator-image
+          path: /tmp/inflator-image.tar
+  notify:
+    needs:
+      - build-release
+      - smoke-test-inflator
+    if: failure()
+    uses: ./.github/workflows/notify.yml
+    with:
+      name: ${{ github.workflow }}
+      success: ${{ !contains(needs.*.result, 'failure') }}
+    secrets: inherit

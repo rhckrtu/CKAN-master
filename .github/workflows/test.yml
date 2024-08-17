@@ -1,0 +1,41 @@
+name: Test CKAN + NetKAN
+
+on:
+  push:
+    branches-ignore:
+      - master
+  workflow_call:
+
+jobs:
+  build-debug:
+    uses: ./.github/workflows/build.yml
+  test-build:
+    needs: build-debug
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install runtime dependencies
+        run: sudo apt-get install -y xvfb
+      - name: Download out artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Debug-out-unsigned
+          path: _build/out/
+      - name: Download repack artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Debug-repack-unsigned
+          path: _build/repack/
+      - name: Run tests
+        run: xvfb-run ./build test+only --configuration=Debug --where="Category!=FlakyNetwork"
+
+  notify:
+    needs:
+      - build-debug
+      - test-build
+    if: failure()
+    uses: ./.github/workflows/notify.yml
+    with:
+      name: ${{ github.workflow }}
+      success: ${{ !contains(needs.*.result, 'failure') }}
+    secrets: inherit

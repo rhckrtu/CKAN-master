@@ -1,0 +1,54 @@
+/_build/
+/.vs/
+/tools
+test-results
+*.userprefs
+*.csproj.user
+*.user
+StyleCop.Cache
+.*.swp
+.fatten.out
+*.resources
+*.suo
+*.orig
+*~
+*.ncrunchproject
+*.ncrunchsolution
+*.pyc
+node_modules/
+venv/
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# Don't ignore the root bin folder
+!/bin/
+
+.config/
+.mypy_cache/
+
+# NuGet Packages
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/packages/repositories.config
+# NuGet v3's project.json files produces more ignorable files
+*.nuget.props
+*.nuget.targets
+
+# Python won't let me install packages globally anymore
+/.venv/
+
+quotes.txt.dat
