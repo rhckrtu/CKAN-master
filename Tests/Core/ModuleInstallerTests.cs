@@ -743,7 +743,7 @@ namespace Tests.Core
         [Test]
         public void CheckExtractedFiles()
         {
-            string mod_file_name = "DogeCoinFlag/Flags/dogecoin2.png";
+            string mod_file_name = "DogeCoinFlag/Flags/dogecoin.png";
 
             // Create a new disposable KSP instance to run the test on.
             Assert.DoesNotThrow(delegate
