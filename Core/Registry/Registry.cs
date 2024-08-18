@@ -853,26 +853,35 @@ namespace CKAN
 
             var inconsistencies = new List<string>();
 
+            Console.WriteLine("var relativeFiles");
             // We always work with relative files, so let's get some!
             var relativeFiles = absoluteFiles.Select(x => inst.ToRelativeGameDir(x))
                                              .ToHashSet(Platform.PathComparer);
 
+            Console.WriteLine("foreach (string file in relativeFiles.Where(file => !Directory.Exists(inst.ToAbsoluteGameDir(file))))");
             // For now, it's always cool if a module wants to register a directory.
             // We have to flip back to absolute paths to actually test this.
             foreach (string file in relativeFiles.Where(file => !Directory.Exists(inst.ToAbsoluteGameDir(file))))
             {
+
+                Console.WriteLine("enter loop");
                 if (installed_files.TryGetValue(file, out string owner))
                 {
+
+                    Console.WriteLine("true");
                     // Woah! Registering an already owned file? Not cool!
                     // (Although if it existed, we should have thrown a kraken well before this.)
                     inconsistencies.Add(string.Format(
                         Properties.Resources.RegistryFileConflict,
                         mod.identifier, file, owner));
+
                 }
+                Console.WriteLine("done if");
             }
 
             if (inconsistencies.Count > 0)
             {
+                Console.WriteLine("inconsistencies.Count > 0");
                 throw new InconsistentKraken(inconsistencies);
             }
 
@@ -886,19 +895,24 @@ namespace CKAN
             // is uninstalled.
             foreach (string file in relativeFiles)
             {
+                Console.WriteLine("installed_files[file] = mod.identifier;");
                 installed_files[file] = mod.identifier;
             }
 
             // Make sure mod-owned files aren't in the manually installed DLL dict
+            Console.WriteLine("installed_dlls.RemoveWhere(kvp => relativeFiles.Contains(kvp.Value));");
             installed_dlls.RemoveWhere(kvp => relativeFiles.Contains(kvp.Value));
 
             // Finally register our module proper
+            Console.WriteLine("installed_modules.Add(mod.identifier, new InstalledModule(inst, mod, relativeFiles, autoInstalled));");
             installed_modules.Add(mod.identifier,
                                   new InstalledModule(inst, mod, relativeFiles, autoInstalled));
 
             // Installing and uninstalling mods can change compatibility due to conflicts,
             // so we'll need to reset the compatibility sorter
+            Console.WriteLine("InvalidateInstalledCaches");
             InvalidateInstalledCaches();
+            Console.WriteLine("InvalidateInstalledCaches done");
         }
 
         /// <summary>
