@@ -745,6 +745,7 @@ namespace Tests.Core
         {
             string mod_file_name = "DogeCoinFlag/Flags/dogecoin2.png";
             string mod_file_name_zip_slip = "DogeCoinFlag/dogecoin2.png";
+            string mod_file_name_zip_slip_root = "dogecoin2.png";
 
             // Create a new disposable KSP instance to run the test on.
             Assert.DoesNotThrow(delegate
@@ -789,16 +790,19 @@ namespace Tests.Core
                     // Check that the module is installed.
                     string mod_file_path = Path.Combine(ksp.KSP.game.PrimaryModDirectory(ksp.KSP), mod_file_name);
                     string mod_file_path_zip_slip = Path.Combine(ksp.KSP.game.PrimaryModDirectory(ksp.KSP), mod_file_name_zip_slip);
+                    string mod_file_path_zip_slip_root = mod_file_name_zip_slip_root;
 
                     // Log the paths being checked
                     Console.WriteLine($"Checking if file exists: {mod_file_path}");
                     Console.WriteLine($"Checking if file exists: {mod_file_path_zip_slip}");
+                    Console.WriteLine($"Checking if file exists: {mod_file_path_zip_slip_root}");
 
                     // Assert multiple conditions and get more information on failure
                     Assert.Multiple(() =>
                     {
                         Assert.IsFalse(File.Exists(mod_file_path), $"File should not exist: {mod_file_path}");
                         Assert.IsTrue(File.Exists(mod_file_path_zip_slip), $"File should exist: {mod_file_path_zip_slip}");
+                      //  Assert.IsTrue(File.Exists(mod_file_path_zip_slip_root), $"File should exist: {mod_file_path_zip_slip_root}");
                     });
                 }
             });
