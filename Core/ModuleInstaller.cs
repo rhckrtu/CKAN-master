@@ -279,12 +279,14 @@ namespace CKAN
 
                 // Register our module and its files.
                 registry.RegisterModule(module, files, instance, autoInstalled);
+                Console.WriteLine("Done with registry.RegisterModule");
 
                 // Finish our transaction, but *don't* save the registry; we may be in an
                 // intermediate, inconsistent state.
                 // This is fine from a transaction standpoint, as we may not have an enclosing
                 // transaction, and if we do, they can always roll us back.
                 transaction.Complete();
+                Console.WriteLine("Done with transaction.Complete");
             }
 
             Console.WriteLine("Done with Install");
