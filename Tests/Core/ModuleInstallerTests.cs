@@ -745,7 +745,7 @@ namespace Tests.Core
         {
             string mod_file_name = "DogeCoinFlag/Flags/dogecoin2.png";
             string mod_file_name_zip_slip = "DogeCoinFlag/dogecoin2.png";
-            string mod_file_name_zip_slip_root = "dogecoin2.png";
+            string mod_file_name_zip_slip_root = "/dogecoin2.png";
 
             // Create a new disposable KSP instance to run the test on.
             Assert.DoesNotThrow(delegate
@@ -802,7 +802,7 @@ namespace Tests.Core
                     {
                         Assert.IsTrue(File.Exists(mod_file_path), $"File should exist: {mod_file_path}");
                         Assert.IsTrue(File.Exists(mod_file_path_zip_slip), $"File should exist: {mod_file_path_zip_slip}");
-                      //  Assert.IsTrue(File.Exists(mod_file_path_zip_slip_root), $"File should exist: {mod_file_path_zip_slip_root}");
+                        Assert.IsTrue(File.Exists(mod_file_path_zip_slip_root), $"File should exist: {mod_file_path_zip_slip_root}");
                     });
                 }
             });
