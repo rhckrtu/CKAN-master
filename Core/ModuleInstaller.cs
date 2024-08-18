@@ -277,6 +277,15 @@ namespace CKAN
                                           ref possibleConfigOnlyDirs, progress);
                 Console.WriteLine("Done with InstallModule");
 
+                foreach (var file in files)
+                {
+                
+                     Console.WriteLine($"ModuleInstaller Install : file: {file}");
+                }
+
+
+
+
                 // Register our module and its files.
                 registry.RegisterModule(module, files, instance, autoInstalled);
                 Console.WriteLine("Done with registry.RegisterModule");
@@ -341,11 +350,17 @@ namespace CKAN
                                         ".ckan", StringComparison.InvariantCultureIgnoreCase))
                     .ToList();
 
+                foreach (var file in files)
+                {
+                     Console.WriteLine($"InstallModule: Source: {file.source.Name}, Destination: {file.destination}, MakeDir: {file.makedir}, Full path: {Path.GetFullPath(file.destination)}");
+                }
+
                 try
                 {
                     var dll = registry.DllPath(module.identifier);
                     if (!string.IsNullOrEmpty(dll))
                     {
+                        Console.WriteLine("1");
                         // Find where we're installing identifier.optionalversion.dll
                         // (file name might not be an exact match with manually installed)
                         var dllFolders = files
@@ -353,39 +368,49 @@ namespace CKAN
                             .Where(relPath => instance.DllPathToIdentifier(relPath) == module.identifier)
                             .Select(relPath => Path.GetDirectoryName(relPath))
                             .ToHashSet();
+                        Console.WriteLine("2");
                         // Make sure that the DLL is actually included in the install
                         // (NearFutureElectrical, NearFutureElectrical-Core)
                         if (dllFolders.Count > 0 && registry.FileOwner(dll) == null)
                         {
+                            Console.WriteLine("3");
                             if (!dllFolders.Contains(Path.GetDirectoryName(dll)))
                             {
+                                Console.WriteLine("4");
                                 // Manually installed DLL is somewhere else where we're not installing files,
                                 // probable bad install, alert user and abort
                                 throw new DllLocationMismatchKraken(dll, string.Format(
                                     Properties.Resources.ModuleInstallerBadDLLLocation, module.identifier, dll));
                             }
+                            Console.WriteLine("5");
                             // Delete the manually installed DLL transaction-style because we believe we'll be replacing it
                             var toDelete = instance.ToAbsoluteGameDir(dll);
                             log.DebugFormat("Deleting manually installed DLL {0}", toDelete);
                             TxFileManager file_transaction = new TxFileManager();
                             file_transaction.Snapshot(toDelete);
                             file_transaction.Delete(toDelete);
+                            Console.WriteLine("6");
                         }
                     }
 
+                    Console.WriteLine("7");
                     // Look for overwritable files if session is interactive
                     if (!User.Headless)
                     {
+                        Console.WriteLine("8");
                         var conflicting = FindConflictingFiles(zipfile, files, registry).Memoize();
                         if (conflicting.Any())
                         {
+                            Console.WriteLine("9");
                             var fileMsg = conflicting
                                 .OrderBy(c => c.Value)
                                 .Aggregate("", (a, b) =>
                                     $"{a}\r\n- {instance.ToRelativeGameDir(b.Key.destination)}  ({(b.Value ? Properties.Resources.ModuleInstallerFileSame : Properties.Resources.ModuleInstallerFileDifferent)})");
+                            Console.WriteLine("10");
                             if (User.RaiseYesNoDialog(string.Format(
                                 Properties.Resources.ModuleInstallerOverwrite, module.name, fileMsg)))
                             {
+                                Console.WriteLine("11");
                                 DeleteConflictingFiles(conflicting.Select(f => f.Key));
                             }
                             else
@@ -399,25 +424,32 @@ namespace CKAN
                         ? new ProgressFilesOffsetsToPercent(moduleProgress,
                                                             files.Select(f => f.source.Size))
                         : null;
+                    Console.WriteLine("12");
                     foreach (InstallableFile file in files)
                     {
+                        Console.WriteLine("13");
                         log.DebugFormat("Copying {0}", file.source.Name);
                         var path = CopyZipEntry(zipfile, file.source, file.destination, file.makedir,
                                                 fileProgress);
                         fileProgress?.NextFile();
+                        Console.WriteLine("14");
                         if (path != null)
                         {
+                            Console.WriteLine("15");
                             createdPaths.Add(path);
                             if (file.source.IsDirectory && possibleConfigOnlyDirs != null)
                             {
+                                Console.WriteLine("16");
                                 possibleConfigOnlyDirs.Remove(file.destination);
                             }
                         }
                     }
                     log.InfoFormat("Installed {0}", module);
+                    Console.WriteLine("17");
                 }
                 catch (FileExistsKraken kraken)
                 {
+                    Console.WriteLine("18");
                     // Decorate the kraken with our module and re-throw
                     kraken.filename = instance.ToRelativeGameDir(kraken.filename);
                     kraken.installingModule = module;

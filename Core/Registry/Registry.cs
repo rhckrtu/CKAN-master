@@ -843,6 +843,15 @@ namespace CKAN
                                    bool         autoInstalled)
         {
             log.DebugFormat("Registering module {0}", mod);
+
+
+            // Print installable files for debugging
+            Console.WriteLine("Installable files found:");
+            foreach (var file in absoluteFiles)
+            {
+                 Console.WriteLine($"RegisterModule: file {file}");
+            }
+
             EnlistWithTransaction();
 
             sorter = null;
