@@ -563,7 +563,7 @@ namespace CKAN
             foreach (var file in files)
             {
                 
-                 Console.WriteLine($"Source: {file.source.Name}, Destination: {file.destination}, MakeDir: {file.makedir}, Normalized Destination: {CKANPathUtils.NormalizePath(file.destination)}");
+                 Console.WriteLine($"Source: {file.source.Name}, Destination: {file.destination}, MakeDir: {file.makedir}, Full path: {Path.GetFullPath(file.destination)}");
             }
 
 
