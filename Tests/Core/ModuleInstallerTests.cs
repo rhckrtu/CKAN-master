@@ -749,43 +749,58 @@ namespace Tests.Core
             // Create a new disposable KSP instance to run the test on.
             Assert.DoesNotThrow(delegate
             {
-                
-                    using (var repo = new TemporaryRepository(TestData.DogeCoinFlag_101ZipSlip()))
-                    using (var repoData = new TemporaryRepositoryData(nullUser, repo.repo))
-                    using (var ksp = new DisposableKSP())
-                    using (var config = new FakeConfiguration(ksp.KSP, ksp.KSP.Name))
-                    using (var manager = new GameInstanceManager(nullUser, config)
-                        {
-                            CurrentInstance = ksp.KSP
-                        })
+
+                using (var repo = new TemporaryRepository(TestData.DogeCoinFlag_101ZipSlip()))
+                using (var repoData = new TemporaryRepositoryData(nullUser, repo.repo))
+                using (var ksp = new DisposableKSP())
+                using (var config = new FakeConfiguration(ksp.KSP, ksp.KSP.Name))
+                using (var manager = new GameInstanceManager(nullUser, config)
+                {
+                    CurrentInstance = ksp.KSP
+                })
+                {
+                    var regMgr = RegistryManager.Instance(manager.CurrentInstance, repoData.Manager);
+                    var registry = regMgr.registry;
+                    registry.RepositoriesClear();
+                    registry.RepositoriesAdd(repo.repo);
+
+                    // Log where the zip file is being stored
+                    Console.WriteLine("Storing zip file in cache...");
+
+                    // Copy the zip file to the cache directory.
+                    manager.Cache.Store(TestData.DogeCoinFlag_101ZipSlip_module(),
+                                        TestData.DogeCoinFlagZipSlipZip(),
+                                        new Progress<int>(percent => Console.WriteLine($"Progress: {percent}%")));
+
+                    // Attempt to install it.
+                    Console.WriteLine("Installing module...");
+
+                    var modules = new List<CkanModule> { TestData.DogeCoinFlag_101ZipSlip_module() };
+
+                    HashSet<string> possibleConfigOnlyDirs = null;
+                    new ModuleInstaller(ksp.KSP, manager.Cache, nullUser)
+                        .InstallList(modules,
+                                     new RelationshipResolverOptions(),
+                                     RegistryManager.Instance(manager.CurrentInstance, repoData.Manager),
+                                     ref possibleConfigOnlyDirs);
+
+                    Console.WriteLine($"Primary mod directory: {ksp.KSP.game.PrimaryModDirectory(ksp.KSP)}");
+
+                    // Check that the module is installed.
+                    string mod_file_path = Path.Combine(ksp.KSP.game.PrimaryModDirectory(ksp.KSP), mod_file_name);
+                    string mod_file_path_zip_slip = Path.Combine(ksp.KSP.game.PrimaryModDirectory(ksp.KSP), mod_file_name_zip_slip);
+
+                    // Log the paths being checked
+                    Console.WriteLine($"Checking if file exists: {mod_file_path}");
+                    Console.WriteLine($"Checking if file exists: {mod_file_path_zip_slip}");
+
+                    // Assert multiple conditions and get more information on failure
+                    Assert.Multiple(() =>
                     {
-                        var regMgr = RegistryManager.Instance(manager.CurrentInstance, repoData.Manager);
-                        var registry = regMgr.registry;
-                        registry.RepositoriesClear();
-                        registry.RepositoriesAdd(repo.repo);
-
-                        // Copy the zip file to the cache directory.
-                        manager.Cache.Store(TestData.DogeCoinFlag_101ZipSlip_module(),
-                                            TestData.DogeCoinFlagZipSlipZip(),
-                                            new Progress<int>(percent => {}));
-
-                        // Attempt to install it.
-                        var modules = new List<CkanModule> { TestData.DogeCoinFlag_101ZipSlip_module() };
-
-                        HashSet<string> possibleConfigOnlyDirs = null;
-                        new ModuleInstaller(ksp.KSP, manager.Cache, nullUser)
-                            .InstallList(modules,
-                                         new RelationshipResolverOptions(),
-                                         RegistryManager.Instance(manager.CurrentInstance, repoData.Manager),
-                                         ref possibleConfigOnlyDirs);
-
-                        // Check that the module is installed.
-                        string mod_file_path = Path.Combine(ksp.KSP.game.PrimaryModDirectory(ksp.KSP), mod_file_name);
-
-                        Assert.IsFalse(File.Exists(mod_file_path));
-                        Assert.IsTrue(File.Exists(mod_file_name_zip_slip));
-                    }
-                
+                        Assert.IsFalse(File.Exists(mod_file_path), $"File should not exist: {mod_file_path}");
+                        Assert.IsTrue(File.Exists(mod_file_path_zip_slip), $"File should exist: {mod_file_path_zip_slip}");
+                    });
+                }
             });
         }
 
