@@ -562,7 +562,8 @@ namespace CKAN
             Console.WriteLine("Installable files found:");
             foreach (var file in files)
             {
-                 Console.WriteLine($"Source: {file.source.Name}, Destination: {file.destination}, MakeDir: {file.makedir}");
+                
+                 Console.WriteLine($"Source: {file.source.Name}, Destination: {file.destination}, MakeDir: {file.makedir}, Normalized Destination: {CKANPathUtils.NormalizePath(file.destination)}");
             }
 
 
