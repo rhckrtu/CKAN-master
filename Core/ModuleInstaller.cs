@@ -245,6 +245,8 @@ namespace CKAN
                              IProgress<int>      progress,
                              string              filename = null)
         {
+
+            Console.WriteLine("Install...");
             CheckKindInstallationKraken(module);
             var version = registry.InstalledVersion(module.identifier);
 
@@ -270,8 +272,10 @@ namespace CKAN
             using (var transaction = CkanTransaction.CreateTransactionScope())
             {
                 // Install all the things!
+                Console.WriteLine("InstallModule...");
                 var files = InstallModule(module, filename, registry,
                                           ref possibleConfigOnlyDirs, progress);
+                Console.WriteLine("Done with InstallModule");
 
                 // Register our module and its files.
                 registry.RegisterModule(module, files, instance, autoInstalled);
@@ -283,6 +287,7 @@ namespace CKAN
                 transaction.Complete();
             }
 
+            Console.WriteLine("Done with Install");
             // Fire our callback that we've installed a module, if we have one.
             onReportModInstalled?.Invoke(module);
 
