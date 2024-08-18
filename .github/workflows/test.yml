@@ -27,4 +27,4 @@ jobs:
           name: Debug-repack-unsigned
           path: _build/repack/
       - name: Run tests
-        run: xvfb-run ./build test+only --configuration=Debug --where="Name==CheckExtractedFiles"
+        run: xvfb-run ./build test+only --configuration=Debug --where="Name==Tests.Core.ModuleInstallerTests.CheckExtractedFiles"
