@@ -61,6 +61,7 @@ namespace CKAN
         /// </summary>
         public static string ToRelative(string path, string root)
         {
+            Console.WriteLine($"ToRelative(string {path}, string {root}");
             if (path == null || root == null)
             {
                 throw new PathErrorKraken(null, "Null path provided");
@@ -72,14 +73,18 @@ namespace CKAN
             path = NormalizePath(path);
             root = NormalizePath(root);
 
+            Console.WriteLine($"normalized path {path}, root {root}");
+
             if (!Path.IsPathRooted(path))
             {
+                Console.WriteLine("!Path.IsPathRooted(path)");
                 throw new PathErrorKraken(path, string.Format(
                     Properties.Resources.PathUtilsNotAbsolute, path));
             }
 
             if (!path.StartsWith(root, Platform.PathComparison))
             {
+                Console.WriteLine("!path.StartsWith(root, Platform.PathComparison)");
                 throw new PathErrorKraken(path, string.Format(
                     Properties.Resources.PathUtilsNotInside, path, root));
             }
