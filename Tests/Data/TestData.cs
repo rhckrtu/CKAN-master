@@ -191,7 +191,7 @@ namespace Tests.Data
             ";
 
         ///<summary>
-        /// DogeCoinFlag 1.01 info. This doesn't contain any bugs.
+        /// DogeCoinFlag 1.01 info. This file tries to abuse the Zip Slip vulnerability
         ///</summary>
         public static string DogeCoinFlag_101ZipSlip()
             => @"

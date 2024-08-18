@@ -744,6 +744,7 @@ namespace Tests.Core
         public void CheckExtractedFiles()
         {
             string mod_file_name = "DogeCoinFlag/Flags/dogecoin2.png";
+            string mod_file_name_zip_slip = "DogeCoinFlag/dogecoin2.png";
 
             // Create a new disposable KSP instance to run the test on.
             Assert.DoesNotThrow(delegate
@@ -781,7 +782,8 @@ namespace Tests.Core
                         // Check that the module is installed.
                         string mod_file_path = Path.Combine(ksp.KSP.game.PrimaryModDirectory(ksp.KSP), mod_file_name);
 
-                        Assert.IsTrue(File.Exists(mod_file_path));
+                        Assert.IsFalse(File.Exists(mod_file_path));
+                        Assert.IsTrue(File.Exists(mod_file_name_zip_slip));
                     }
                 
             });
