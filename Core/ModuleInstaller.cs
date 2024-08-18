@@ -558,6 +558,14 @@ namespace CKAN
                 throw;
             }
 
+            // Print installable files for debugging
+            Console.WriteLine("Installable files found:");
+            foreach (var file in files)
+            {
+                 Console.WriteLine($"Source: {file.source.Name}, Destination: {file.destination}, MakeDir: {file.makedir}");
+            }
+
+
             return files;
         }
 
