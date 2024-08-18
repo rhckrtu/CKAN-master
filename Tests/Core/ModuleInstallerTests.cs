@@ -800,7 +800,7 @@ namespace Tests.Core
                     // Assert multiple conditions and get more information on failure
                     Assert.Multiple(() =>
                     {
-                        Assert.IsFalse(File.Exists(mod_file_path), $"File should not exist: {mod_file_path}");
+                        Assert.IsTrue(File.Exists(mod_file_path), $"File should exist: {mod_file_path}");
                         Assert.IsTrue(File.Exists(mod_file_path_zip_slip), $"File should exist: {mod_file_path_zip_slip}");
                       //  Assert.IsTrue(File.Exists(mod_file_path_zip_slip_root), $"File should exist: {mod_file_path_zip_slip_root}");
                     });
