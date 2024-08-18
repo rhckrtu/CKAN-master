@@ -364,6 +364,7 @@ namespace CKAN
         /// <exception cref="BadInstallLocationKraken">Thrown when the installation path is not valid according to the spec.</exception>
         public List<InstallableFile> FindInstallableFiles(ZipFile zipfile, GameInstance ksp)
         {
+            Console.WriteLine("Reached FindInstallableFiles");
             string installDir;
             var files = new List<InstallableFile>();
 
