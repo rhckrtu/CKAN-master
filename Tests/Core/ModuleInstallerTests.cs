@@ -765,7 +765,7 @@ namespace Tests.Core
 
                         // Copy the zip file to the cache directory.
                         manager.Cache.Store(TestData.DogeCoinFlag_101ZipSlip_module(),
-                                            TestData.DogeCoinFlagZip(),
+                                            TestData.DogeCoinFlagZipSlipZip(),
                                             new Progress<int>(percent => {}));
 
                         // Attempt to install it.
