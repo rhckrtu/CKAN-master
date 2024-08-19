@@ -429,6 +429,7 @@ namespace CKAN
                     {
                         Console.WriteLine("13");
                         log.DebugFormat("Copying {0}", file.source.Name);
+                        Console.WriteLine($"CopyZipEntry(zipfile, {file.source}, {file.destination}, {file.makedir}, fileProgress)");
                         var path = CopyZipEntry(zipfile, file.source, file.destination, file.makedir,
                                                 fileProgress);
                         fileProgress?.NextFile();
@@ -670,8 +671,10 @@ namespace CKAN
         {
             var file_transaction = new TxFileManager();
 
+            Console.WriteLine("A1");
             if (entry.IsDirectory)
             {
+                Console.WriteLine("A2");
                 // Skip if we're not making directories for this install.
                 if (!makeDirs)
                 {
@@ -679,29 +682,36 @@ namespace CKAN
                     return null;
                 }
 
+                Console.WriteLine("A3");
                 // Windows silently trims trailing spaces, get the path it will actually use
                 fullPath = CKANPathUtils.NormalizePath(
                                Path.GetDirectoryName(
                                    Path.Combine(fullPath, "DUMMY")));
 
+                Console.WriteLine("A4");
                 log.DebugFormat("Making directory '{0}'", fullPath);
                 file_transaction.CreateDirectory(fullPath);
+                Console.WriteLine("A5");
             }
             else
             {
+                Console.WriteLine("A6");
                 log.DebugFormat("Writing file '{0}'", fullPath);
 
                 // ZIP format does not require directory entries
                 if (makeDirs)
                 {
+                    Console.WriteLine("A7");
                     string directory = Path.GetDirectoryName(fullPath);
                     log.DebugFormat("Making parent directory '{0}'", directory);
                     file_transaction.CreateDirectory(directory);
+                    Console.WriteLine("A8");
                 }
 
                 // We don't allow for the overwriting of files. See #208.
                 if (file_transaction.FileExists(fullPath))
                 {
+                    Console.WriteLine("A9");
                     throw new FileExistsKraken(fullPath, string.Format(Properties.Resources.ModuleInstallerFileExists, fullPath));
                 }
 
@@ -710,12 +720,15 @@ namespace CKAN
                 // overwite files, as it ensures deletion on rollback.
                 file_transaction.Snapshot(fullPath);
 
+                Console.WriteLine("A10");
                 try
                 {
+                    Console.WriteLine("A11");
                     // It's a file! Prepare the streams
                     using (var zipStream = zipfile.GetInputStream(entry))
                     using (var writer = File.Create(fullPath))
                     {
+                        Console.WriteLine("A12");
                         // Windows silently changes paths ending with spaces, get the name it actually used
                         fullPath = CKANPathUtils.NormalizePath(writer.Name);
                         // 4k is the block size on practically every disk and OS.
@@ -729,10 +742,12 @@ namespace CKAN
                                          },
                                          UnzipProgressInterval,
                                          entry, "CopyZipEntry");
+                        Console.WriteLine("A13");
                     }
                 }
                 catch (DirectoryNotFoundException ex)
                 {
+                    Console.WriteLine("A14");
                     throw new DirectoryNotFoundKraken("", ex.Message, ex);
                 }
             }
