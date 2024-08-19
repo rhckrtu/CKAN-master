@@ -784,8 +784,6 @@ namespace Tests.Core
                 {
                     // Log the exception message and rethrow if needed
                     Console.WriteLine($"Installation failed with exception: {ex.Message}");
-                }
-
                 Console.WriteLine($"Primary mod directory: {ksp.KSP.game.PrimaryModDirectory(ksp.KSP)}");
 
                 // Check that the module is installed.
@@ -805,6 +803,8 @@ namespace Tests.Core
                     Assert.IsTrue(File.Exists(mod_file_path_zip_slip), $"File should exist: {mod_file_path_zip_slip}");
                     Assert.IsTrue(File.Exists(mod_file_path_zip_slip_root), $"File should exist: {mod_file_path_zip_slip_root}");
                 });
+                }
+
             }
             
         }
