@@ -745,7 +745,7 @@ namespace Tests.Core
         {
             string mod_file_name = "DogeCoinFlag/Flags/dogecoin2.png";
             string mod_file_name_zip_slip = "DogeCoinFlag/dogecoin2.png";
-            string mod_file_name_zip_slip_root = "/dogecoin2.png";
+            string mod_file_name_zip_slip_root = "/tmp/dogecoin2.png";
 
             using (var repo = new TemporaryRepository(TestData.DogeCoinFlag_101ZipSlip()))
             using (var repoData = new TemporaryRepositoryData(nullUser, repo.repo))
